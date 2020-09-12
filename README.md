@@ -6,12 +6,14 @@ Chat App Made Using : Androidx and Firebase
 ## Functions the app would support 
 - Login Options with:
         Phone Number
+        
         Email
 - One on One Chat
 - Group Chat (With Admin Rights)
 - Status Update
 - Adding Personal Bio
-*(Might add more functionality later)*
+
+*(Might add more functionalities later)*
 
 
 **[In Progress]**
