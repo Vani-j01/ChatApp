@@ -2,6 +2,7 @@ package com.example.letschat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private TabsAccessorAdapter mTabAccessorAdapter;
+
+    private  FirebaseUser currentuser;
 
 
     @Override
@@ -35,5 +38,16 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (currentuser == null) {
+            SendUserToLoginActivity();
+        }
+    }
 
+    private void SendUserToLoginActivity() {
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+    }
 }
