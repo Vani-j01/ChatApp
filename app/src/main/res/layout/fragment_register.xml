@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".register">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccentLight">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="162dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="142dp"
+            android:background="#fff"
+            android:padding="20dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/reg_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="REGISTER"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/fname_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reg_head"
+                android:layout_marginBottom="10dp"
+                android:text="First Name:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/fname_enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fname_head"
+                android:background="@drawable/input"
+                android:hint="Enter First Name"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColorHint="@color/extraText"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/lname_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fname_enter"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Last Name:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/lname_enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lname_head"
+                android:background="@drawable/input"
+                android:hint="Enter Last Name"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColorHint="@color/extraText"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/email_reg_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lname_enter"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Email:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/email_reg_enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/email_reg_head"
+                android:background="@drawable/input"
+                android:inputType="textEmailAddress"
+                android:hint="eample.ex@email.com"
+                android:padding="5dp"
+                android:textColorHint="@color/extraText"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/password_reg_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/email_reg_enter"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Password:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/password_reg_enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/password_reg_head"
+                android:background="@drawable/input"
+                android:inputType="textPassword"
+                android:hint="********"
+                android:padding="5dp"
+                android:textColorHint="@color/extraText"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/reg_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/password_reg_enter"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="70dp"
+                android:background="@drawable/buttons"
+                android:text="Register"
+                android:textColor="#000" />
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
