@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +25,14 @@ public class LoginActivity extends AppCompatActivity {
         // Create new fragment and transaction
         Fragment newFragment = new loginORregister();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
 // Replace whatever is in the fragment_container view with this fragment,
 // and add the transaction to the back stack
         transaction.replace(R.id.frag_container, newFragment);
-
-
 // Commit the transaction
         transaction.commit();
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
     }
 
@@ -48,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void openRegister(View view) {
+    public void openRegister() {
         // Create new fragment and transaction
         Fragment newFragment = new register();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

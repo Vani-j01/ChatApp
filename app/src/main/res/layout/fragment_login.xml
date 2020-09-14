@@ -57,7 +57,8 @@
                 android:inputType="textEmailAddress"
                 android:padding="5dp"
                 android:textColorHint="@color/extraText"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="#000"/>
 
             <TextView
                 android:id="@+id/password_head"
@@ -80,7 +81,8 @@
                 android:inputType="textPassword"
                 android:padding="5dp"
                 android:textColorHint="@color/extraText"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="#000"/>
 
             <Button
                 android:id="@+id/login_btn"

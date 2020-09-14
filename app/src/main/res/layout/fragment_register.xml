@@ -57,6 +57,7 @@
                 android:hint="Enter First Name"
                 android:inputType="text"
                 android:padding="5dp"
+                android:textColor="#000"
                 android:textColorHint="@color/extraText"
                 android:textSize="18sp" />
 
@@ -80,6 +81,7 @@
                 android:hint="Enter Last Name"
                 android:inputType="text"
                 android:padding="5dp"
+                android:textColor="#000"
                 android:textColorHint="@color/extraText"
                 android:textSize="18sp" />
 
@@ -100,9 +102,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/email_reg_head"
                 android:background="@drawable/input"
-                android:inputType="textEmailAddress"
                 android:hint="eample.ex@email.com"
+                android:inputType="textEmailAddress"
                 android:padding="5dp"
+                android:textColor="#000"
                 android:textColorHint="@color/extraText"
                 android:textSize="18sp" />
 
@@ -123,9 +126,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/password_reg_head"
                 android:background="@drawable/input"
-                android:inputType="textPassword"
                 android:hint="********"
+                android:inputType="textPassword"
                 android:padding="5dp"
+                android:textColor="#000"
                 android:textColorHint="@color/extraText"
                 android:textSize="18sp" />
 
