@@ -8,6 +8,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:title="Create Group"
+        android:id="@+id/creategroup_option"
+        app:showAsAction="never"/>
+
+    <item
         android:title="Settings"
         android:id="@+id/settings_option"
         app:showAsAction="never"/>
