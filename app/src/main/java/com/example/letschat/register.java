@@ -18,6 +18,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,8 +40,10 @@ public class register extends Fragment {
     private String mParam2;
 
     private Button reg_btn;
-    private EditText User_email, User_password;
-    FirebaseAuth mAuth;
+    private EditText User_email, User_password, User_name, User_Username;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference Rootrefference;
     private ProgressDialog progressBar;
 
     public register() {
@@ -79,8 +85,12 @@ public class register extends Fragment {
         reg_btn = view.findViewById(R.id.reg_btn);
         User_email = view.findViewById(R.id.email_reg_enter);
         User_password = view.findViewById(R.id.password_reg_enter);
+        User_name = view.findViewById(R.id.name_enter);
+        User_Username = view.findViewById(R.id.user_name_enter);
 
         mAuth = FirebaseAuth.getInstance();
+        Rootrefference = FirebaseDatabase.getInstance().getReference();
+
         progressBar = new ProgressDialog(getActivity());
 
         reg_btn.setOnClickListener(new View.OnClickListener() {
@@ -94,30 +104,51 @@ public class register extends Fragment {
 
     private void CreateNewAccount() {
 
-        String email = User_email.getText().toString();
-        String password = User_password.getText().toString();
+        String UserName = User_name.getText().toString();
+        String UserUsername = User_Username.getText().toString();
+        String UserEmail = User_email.getText().toString();
+        String UserPassword = User_password.getText().toString();
 
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getActivity(), "Please Enter Email...", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(UserName)){
+            Toast.makeText(getActivity(), "Please Enter Name..", Toast.LENGTH_SHORT).show();
+            return;
         }
-        if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(UserUsername)){
+            Toast.makeText(getActivity(), "Please Enter Username...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(UserEmail)) {
+            Toast.makeText(getActivity(), "Please Enter Email...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(UserPassword)) {
             Toast.makeText(getActivity(), "Please Enter Password...", Toast.LENGTH_SHORT).show();
+            return;
         } else {
             progressBar.setTitle("Creating New Account");
             progressBar.setMessage("Please wait, while we create your Account");
             progressBar.setCanceledOnTouchOutside(true);
             progressBar.show();
 
-            mAuth.createUserWithEmailAndPassword(email, password)
+            final HashMap<String, String> profileMap = new HashMap<>();
+            profileMap.put("name", UserName);
+            profileMap.put("email", UserEmail);
+            profileMap.put("password", UserPassword);
+            profileMap.put("username", UserUsername);
+
+            mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if (task.isSuccessful()) {
+                                String currentUserID = mAuth.getCurrentUser().getUid();
+                                Rootrefference.child("Users").child(currentUserID).setValue(profileMap);
+
                                 Toast.makeText(getActivity(), "Account Created Successfully", Toast.LENGTH_SHORT).show();
                                 progressBar.dismiss();
 
-                                ((LoginActivity)getActivity()).openLogin();
+                                ((LoginActivity)getActivity()).SendUserToMainActivity();
                             }
                             else
                                 {

@@ -52,11 +52,26 @@ public class MainActivity extends AppCompatActivity {
         if (currentuser == null) {
             SendUserToLoginActivity();
         }
+        else
+        {
+            VerifyUserExistance();
+        }
+    }
+
+    private void VerifyUserExistance() {
+        String currentUserId = mAuth.getCurrentUser().getUid();
     }
 
     private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
+        finish();
+    }
+
+    private void SendUserToSettingsActivity() {
+        Intent settingsIntent = new Intent(MainActivity.this, Settings.class);
+        startActivity(settingsIntent);
     }
 
     @Override
@@ -82,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                  break;
 
              case R.id.settings_option:
+                 SendUserToSettingsActivity();
 
                  break;
          }

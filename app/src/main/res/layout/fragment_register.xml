@@ -44,17 +44,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/reg_head"
                 android:layout_marginBottom="10dp"
-                android:text="First Name:"
+                android:text="Name:"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/fname_enter"
+                android:id="@+id/name_enter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fname_head"
                 android:background="@drawable/input"
-                android:hint="Enter First Name"
+                android:hint="Enter Name"
                 android:inputType="text"
                 android:padding="5dp"
                 android:textColor="#000"
@@ -62,23 +62,23 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/lname_head"
+                android:id="@+id/user_name_head"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/fname_enter"
+                android:layout_below="@+id/name_enter"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
-                android:text="Last Name:"
+                android:text="User Name:"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/lname_enter"
+                android:id="@+id/user_name_enter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lname_head"
+                android:layout_below="@+id/user_name_head"
                 android:background="@drawable/input"
-                android:hint="Enter Last Name"
+                android:hint="Enter User Name"
                 android:inputType="text"
                 android:padding="5dp"
                 android:textColor="#000"
@@ -89,7 +89,7 @@
                 android:id="@+id/email_reg_head"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lname_enter"
+                android:layout_below="@+id/user_name_enter"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:text="Email:"
