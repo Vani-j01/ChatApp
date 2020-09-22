@@ -32,7 +32,7 @@ public class Settings extends AppCompatActivity {
     private CircleImageView userDisplayImage;
     private String currentUserId;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRefference;
+    private DatabaseReference RootReference;
 
 
     @Override
@@ -55,12 +55,12 @@ public class Settings extends AppCompatActivity {
 
     private void RetrieveUserData() {
 
-        RootRefference.child("Users").child(currentUserId)
+        RootReference.child("Users").child(currentUserId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        if ((snapshot.exists()) && (snapshot.hasChild("username")) && (snapshot.hasChild("image"))){
+                        if ((snapshot.exists()) && (snapshot.hasChild("username")) && (snapshot.hasChild("image"))) {
 
                             String retrieveUserName = snapshot.child("username").getValue().toString();
                             String retrieveUserStatus = snapshot.child("status").getValue().toString();
@@ -68,15 +68,13 @@ public class Settings extends AppCompatActivity {
 
                             userName.setText(retrieveUserName);
                             userStatus.setText(retrieveUserStatus);
-                        }
-                        else if ((snapshot.exists()) && (snapshot.hasChild("username"))){
+                        } else if ((snapshot.exists()) && (snapshot.hasChild("username"))) {
                             String retrieveUserName = snapshot.child("username").getValue().toString();
                             String retrieveUserStatus = snapshot.child("status").getValue().toString();
 
                             userName.setText(retrieveUserName);
                             userStatus.setText(retrieveUserStatus);
-                        }
-                        else{
+                        } else {
                             Toast.makeText(Settings.this, "Please Set & Update profile information", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -93,47 +91,43 @@ public class Settings extends AppCompatActivity {
         UpdateAccountSettings = findViewById(R.id.update_settings);
         userName = findViewById(R.id.display_name_enter);
         userStatus = findViewById(R.id.status_enter);
-        userDisplayImage= findViewById(R.id.profile_image);
+        userDisplayImage = findViewById(R.id.profile_image);
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
-        RootRefference = FirebaseDatabase.getInstance().getReference();
+        RootReference = FirebaseDatabase.getInstance().getReference();
     }
-
 
 
     private void updateSettings() {
         String setUserName = userName.getText().toString();
         String setUserStatus = userStatus.getText().toString();
 
-        if (TextUtils.isEmpty(setUserName)){
+        if (TextUtils.isEmpty(setUserName)) {
             Toast.makeText(this, "Please Enter Username", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(setUserStatus)){
+        if (TextUtils.isEmpty(setUserStatus)) {
             Toast.makeText(this, "Please Update Status", Toast.LENGTH_SHORT).show();
             return;
-        }
-        else{
+        } else {
             Map<String, Object> profileMap = new HashMap<String, Object>();
-                profileMap.put("uid", currentUserId);
-                profileMap.put("username", setUserName);
-                profileMap.put("status", setUserStatus);
+            profileMap.put("uid", currentUserId);
+            profileMap.put("username", setUserName);
+            profileMap.put("status", setUserStatus);
 
-                RootRefference.child("Users").child(currentUserId).updateChildren(profileMap)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful())
-                                {
-                                    SendUserToMainActivity();
-                                    Toast.makeText(Settings.this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    String error = task.getException().toString();
-                                    Toast.makeText(Settings.this, "Error :"+error, Toast.LENGTH_SHORT).show();
-                                }
+            RootReference.child("Users").child(currentUserId).updateChildren(profileMap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                SendUserToMainActivity();
+                                Toast.makeText(Settings.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                            } else {
+                                String error = task.getException().toString();
+                                Toast.makeText(Settings.this, "Error :" + error, Toast.LENGTH_SHORT).show();
                             }
-                        });
+                        }
+                    });
 
         }
     }

@@ -1,5 +1,7 @@
 package com.example.letschat;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,8 +10,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -86,6 +90,18 @@ public class Groups extends Fragment {
 
         RetrieveGroups();
 
+        List_View.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String currentGroupName = parent.getItemAtPosition(position).toString();
+
+                Intent GroupChatIntent = new Intent(getContext(), Group_Chat_Activity.class);
+                GroupChatIntent.putExtra("groupName", currentGroupName);
+                startActivity(GroupChatIntent);
+            }
+        });
+
         return groupFragmentView;
     }
 
@@ -115,7 +131,7 @@ public class Groups extends Fragment {
     }
 
     private void Initialization() {
-        List_View = groupFragmentView.findViewById(R.id.groups_list_view);
+        List_View = (ListView) groupFragmentView.findViewById(R.id.groups_list_view);
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list_of_groups);
         List_View.setAdapter(arrayAdapter);
     }

@@ -1,3 +1,8 @@
+
+/**
+ * Main Activity: Has TabView for Navigation
+ **/
+
 package com.example.letschat;
 
 import androidx.annotation.NonNull;
@@ -16,6 +21,9 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.letschat.LoginActivity;
+import com.example.letschat.R;
+import com.example.letschat.TabsAccessorAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -31,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private TabsAccessorAdapter mTabAccessorAdapter;
 
-    private  FirebaseUser currentuser;
+    private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRefference;
+    private DatabaseReference RootReference;
 
 
     @Override
@@ -41,14 +49,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initializations
+        //References to Firebase Database
         mAuth = FirebaseAuth.getInstance();
-        currentuser= mAuth.getCurrentUser();
-        RootRefference = FirebaseDatabase.getInstance().getReference();
+        currentuser = mAuth.getCurrentUser();
+        RootReference = FirebaseDatabase.getInstance().getReference();
 
+
+        //Setting Custom Toolbar
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Let's Chat");
 
+
+        //Setting Tab Nav View
         mViewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
         mTabAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mTabAccessorAdapter);
@@ -57,17 +71,18 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
+
+    /** Checking if user exists otherwise send to login Activity **/
     @Override
     protected void onStart() {
         super.onStart();
         if (currentuser == null) {
             SendUserToLoginActivity();
-        }
-        else
-        {
+        } else {
             VerifyUserExistance();
         }
     }
+
 
     private void VerifyUserExistance() {
         String currentUserId = mAuth.getCurrentUser().getUid();
@@ -80,47 +95,52 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+
+    /** Creating Options Available on toolbar**/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    //Functions according to selected options
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.logout_option:
+                mAuth.signOut();
+                SendUserToLoginActivity();
+                break;
+
+            case R.id.find_friends_option:
+
+                break;
+
+            case R.id.settings_option:
+                SendUserToSettingsActivity();
+
+                break;
+
+            case R.id.creategroup_option:
+                RequestNewGroup();
+                break;
+        }
+
+        return true;
+    }
+
     private void SendUserToSettingsActivity() {
         Intent settingsIntent = new Intent(MainActivity.this, Settings.class);
         startActivity(settingsIntent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.options_menu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-         super.onOptionsItemSelected(item);
-
-         switch (item.getItemId()){
-             case R.id.logout_option:
-                 mAuth.signOut();
-                 SendUserToLoginActivity();
-                 break;
-
-             case R.id.find_friends_option:
-
-                 break;
-
-             case R.id.settings_option:
-                 SendUserToSettingsActivity();
-
-                 break;
-
-             case R.id.creategroup_option:
-                 RequestNewGroup();
-                 break;
-         }
-
-         return true;
-    }
-
     private void RequestNewGroup() {
+
+        //PopUp Alert Dialog Box with EditText
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         builder.setTitle("Enter Group Name: ");
         final EditText groupNameField = new EditText(MainActivity.this);
@@ -134,10 +154,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String groupName = groupNameField.getText().toString();
 
-                if (TextUtils.isEmpty(groupName)){
+                if (TextUtils.isEmpty(groupName)) {
                     Toast.makeText(MainActivity.this, "Provide GroupName", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
 
                     CreateNewGroup(groupName);
                 }
@@ -157,14 +176,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void CreateNewGroup(final String groupName) {
-        RootRefference.child("Groups").child(groupName).setValue("")
+        RootReference.child("Groups").child(groupName).setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, groupName+" is Created Successfully", Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, groupName + " is Created Successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+        RootReference.child("Groups").child(groupName).setValue("messageKey", "");
+
     }
 }

@@ -104,16 +104,18 @@ public class register extends Fragment {
 
     private void CreateNewAccount() {
 
-        String UserName = User_name.getText().toString();
-        String UserUsername = User_Username.getText().toString();
-        String UserEmail = User_email.getText().toString();
-        String UserPassword = User_password.getText().toString();
+        final String UserName = User_name.getText().toString();
+        final String UserUsername = User_Username.getText().toString();
+        final String UserEmail = User_email.getText().toString();
+        final String UserPassword = User_password.getText().toString();
 
-        if (TextUtils.isEmpty(UserName)){
+
+        //Checking If user filled all the fields
+        if (TextUtils.isEmpty(UserName)) {
             Toast.makeText(getActivity(), "Please Enter Name..", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(UserUsername)){
+        if (TextUtils.isEmpty(UserUsername)) {
             Toast.makeText(getActivity(), "Please Enter Username...", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -130,11 +132,6 @@ public class register extends Fragment {
             progressBar.setCanceledOnTouchOutside(true);
             progressBar.show();
 
-            final HashMap<String, String> profileMap = new HashMap<>();
-            profileMap.put("name", UserName);
-            profileMap.put("email", UserEmail);
-            profileMap.put("password", UserPassword);
-            profileMap.put("username", UserUsername);
 
             mAuth.createUserWithEmailAndPassword(UserEmail, UserPassword)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -143,15 +140,21 @@ public class register extends Fragment {
 
                             if (task.isSuccessful()) {
                                 String currentUserID = mAuth.getCurrentUser().getUid();
+                                final HashMap<String, String> profileMap = new HashMap<>();
+                                profileMap.put("name", UserName);
+                                profileMap.put("email", UserEmail);
+                                profileMap.put("password", UserPassword);
+                                profileMap.put("username", UserUsername);
+                                profileMap.put("uid", currentUserID);
+                                profileMap.put("status", "Available");
                                 Rootrefference.child("Users").child(currentUserID).setValue(profileMap);
 
                                 Toast.makeText(getActivity(), "Account Created Successfully", Toast.LENGTH_SHORT).show();
+
                                 progressBar.dismiss();
 
-                                ((LoginActivity)getActivity()).SendUserToMainActivity();
-                            }
-                            else
-                                {
+                                ((LoginActivity) getActivity()).SendUserToMainActivity();
+                            } else {
                                 String error_msg = task.getException().toString();
                                 Toast.makeText(getActivity(), "ERROR: " + error_msg, Toast.LENGTH_SHORT).show();
                                 progressBar.dismiss();

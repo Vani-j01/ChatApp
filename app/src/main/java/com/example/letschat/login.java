@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +40,8 @@ public class login extends Fragment {
     private Button log_btn;
     private EditText User_email, User_password;
     private ProgressDialog progressBar;
-    FirebaseAuth mAuth;
+     private FirebaseAuth mAuth;
+     private DatabaseReference RootReference;
 
     public login() {
         // Required empty public constructor
@@ -81,9 +84,10 @@ public class login extends Fragment {
 
         log_btn = view.findViewById(R.id.login_btn);
         User_email = view.findViewById(R.id.email_enter);
-        User_password= view.findViewById(R.id.password_enter);
+        User_password = view.findViewById(R.id.password_enter);
 
         mAuth = FirebaseAuth.getInstance();
+        RootReference = FirebaseDatabase.getInstance().getReference();
         progressBar = new ProgressDialog(getActivity());
 
         log_btn.setOnClickListener(new View.OnClickListener() {
@@ -100,37 +104,37 @@ public class login extends Fragment {
         String email = User_email.getText().toString();
         String password = User_password.getText().toString();
 
+        //Checking if user have enter all the fields
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getActivity(), "Please Enter Email...", Toast.LENGTH_SHORT).show();
         }
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(getActivity(), "Please Enter Password...", Toast.LENGTH_SHORT).show();
-        }
-        else
-            {
-                progressBar.setTitle("Logging In");
-                progressBar.setMessage("Please wait, while we LogIn to your Account");
-                progressBar.setCanceledOnTouchOutside(true);
-                progressBar.show();
+        } else {
+            //Dialog Box informing user that login is going on
+            progressBar.setTitle("Logging In");
+            progressBar.setMessage("Please wait, while we LogIn to your Account");
+            progressBar.setCanceledOnTouchOutside(true);
+            progressBar.show();
 
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()){
-                                    ((LoginActivity)getActivity()).SendUserToMainActivity();
-                                    Toast.makeText(getActivity(), "Logged In Successfully", Toast.LENGTH_SHORT).show();
-                                    progressBar.dismiss();
-                                }
-                                else
-                                {
-                                    String error_msg = task.getException().toString();
-                                    Toast.makeText(getActivity(), "ERROR: " + error_msg, Toast.LENGTH_SHORT).show();
-                                    progressBar.dismiss();
-                                }
+            //logging in
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                ((LoginActivity) getActivity()).SendUserToMainActivity();
+                                Toast.makeText(getActivity(), "Logged In Successfully", Toast.LENGTH_SHORT).show();
+                                progressBar.dismiss();
+
+                            } else {
+                                String error_msg = task.getException().toString();
+                                Toast.makeText(getActivity(), "ERROR: " + error_msg, Toast.LENGTH_SHORT).show();
+                                progressBar.dismiss();
                             }
-                        });
-            }
+                        }
+                    });
+        }
     }
 
 

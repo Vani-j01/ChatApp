@@ -1,3 +1,8 @@
+
+/**
+ * Login Activity: Activity to hold all the fragments related to login and registration
+ **/
+
 package com.example.letschat;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,51 +27,56 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        // Create new fragment and transaction
+        // Create new fragment and transaction which replaces the already opened fragment with the new one
         Fragment newFragment = new loginORregister();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
         transaction.replace(R.id.frag_container, newFragment);
-// Commit the transaction
+        // Commit the transaction
         transaction.commit();
 
         mAuth = FirebaseAuth.getInstance();
 
     }
 
+
+    //Opens Login Activity on Click
     public void openLogin() {
         // Create new fragment and transaction
         Fragment newFragment = new login();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
         transaction.replace(R.id.frag_container, newFragment);
         transaction.addToBackStack(null);
 
-// Commit the transaction
+        // Commit the transaction
         transaction.commit();
     }
 
+
+    //Opens Register Activity on Click
     public void openRegister() {
         // Create new fragment and transaction
         Fragment newFragment = new register();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
         transaction.replace(R.id.frag_container, newFragment);
         transaction.addToBackStack(null);
 
-// Commit the transaction
+        // Commit the transaction
         transaction.commit();
     }
 
 
+    //Sends User To main Activity when Login Or Registration Completed in Fragment
     public void SendUserToMainActivity() {
         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-       mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
     }
