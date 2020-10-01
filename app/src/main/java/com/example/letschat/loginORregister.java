@@ -25,7 +25,7 @@ public class loginORregister extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button log_btn, reg_btn;
+    private Button log_btn, reg_btn, phone_reg;
 
     public loginORregister() {
         // Required empty public constructor
@@ -66,6 +66,7 @@ public class loginORregister extends Fragment {
 
         log_btn = view.findViewById(R.id.button);
         reg_btn = view.findViewById(R.id.button2);
+        phone_reg = view.findViewById(R.id.phone_reg_btn);
         ButtonFunction();
         return view;
     }
@@ -83,6 +84,13 @@ public class loginORregister extends Fragment {
             @Override
             public void onClick(View v) {
                 ((LoginActivity)getActivity()).openRegister();
+            }
+        });
+
+        phone_reg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LoginActivity)getActivity()).openPhoneRegister();
             }
         });
     }

@@ -1,12 +1,15 @@
 package com.example.letschat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.icu.text.Edits;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Group_Chat_Activity extends AppCompatActivity {
 
@@ -67,12 +72,76 @@ public class Group_Chat_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SaveMsgToDatabase();
+
+                //Automatically scrolls to the end
+
                 userMsg.setText("");
+            }
+        });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //replace this line to scroll up or down
+                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        }, 100L);
+
+
+        GroupNameReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()){
+                    DisplayMessages(snapshot);
+                    mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()){
+                    DisplayMessages(snapshot);
+                    mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
 
+    private void DisplayMessages(DataSnapshot snapshot) {
+        Iterator iterator = snapshot.getChildren().iterator();
 
+        while (iterator.hasNext()){
+            String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatMessage= (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatName= (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatTime= (String) ((DataSnapshot)iterator.next()).getValue();
+
+            groupMsgDisplay.append(chatName + ":\n" + chatMessage+ "\n" + chatTime + "\t"+ chatDate+ "\n\n\n");
+
+        }
+
+    }
 
     private void SaveMsgToDatabase() {
         String message = userMsg.getText().toString();

@@ -72,6 +72,19 @@ public class LoginActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    public void openPhoneRegister() {
+        // Create new fragment and transaction
+        Fragment newFragment = new PhoneLogin();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        transaction.replace(R.id.frag_container, newFragment);
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
 
     //Sends User To main Activity when Login Or Registration Completed in Fragment
     public void SendUserToMainActivity() {
@@ -79,6 +92,27 @@ public class LoginActivity extends AppCompatActivity {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
+    }
+
+    public void SendUserToSettingsActivity() {
+        Intent settingIntent = new Intent(LoginActivity.this, Settings.class);
+        settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(settingIntent);
+        finish();
+    }
+
+    public void openPhoneUserInfo() {
+        // Create new fragment and transaction
+        Fragment newFragment = new RegisterPhoneLogin();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        transaction.replace(R.id.frag_container, newFragment);
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
     }
 
 

@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.find_friends_option:
-
+                SendUserToFindFriendsActivity();
                 break;
 
             case R.id.settings_option:
@@ -132,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    private void SendUserToFindFriendsActivity() {
+        Intent FindFriendIntent = new Intent(MainActivity.this, FindFriends.class);
+        startActivity(FindFriendIntent);
+    }
+
 
     private void SendUserToSettingsActivity() {
         Intent settingsIntent = new Intent(MainActivity.this, Settings.class);

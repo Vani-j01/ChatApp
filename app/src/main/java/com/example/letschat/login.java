@@ -37,7 +37,7 @@ public class login extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button log_btn;
+    private Button log_btn, phone_log_btn;
     private EditText User_email, User_password;
     private ProgressDialog progressBar;
      private FirebaseAuth mAuth;
@@ -83,6 +83,7 @@ public class login extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         log_btn = view.findViewById(R.id.login_btn);
+        phone_log_btn = view.findViewById(R.id.phone_login_btn);
         User_email = view.findViewById(R.id.email_enter);
         User_password = view.findViewById(R.id.password_enter);
 
@@ -96,6 +97,7 @@ public class login extends Fragment {
                 AllowUserToLogin();
             }
         });
+        
 
         return view;
     }

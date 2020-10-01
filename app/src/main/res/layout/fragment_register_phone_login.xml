@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".RegisterPhoneLogin">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,11 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="149dp"
+            android:layout_marginTop="162dp"
             android:layout_marginEnd="45dp"
-            android:layout_marginBottom="155dp"
+            android:layout_marginBottom="142dp"
             android:background="#fff"
             android:padding="20dp"
+            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -28,100 +28,103 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/login_head"
+                android:id="@+id/reg_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="Login"
+                android:text="USER INFO"
                 android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/email_head"
+                android:id="@+id/name_head"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/login_head"
+                android:layout_below="@+id/reg_head"
                 android:layout_marginBottom="10dp"
-                android:text="Email:"
+                android:text="Name:"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/email_enter"
+                android:id="@+id/phuser_name_enter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/email_head"
+                android:layout_below="@+id/name_head"
                 android:background="@drawable/input"
-                android:hint="example.ex@email.com"
-                android:inputType="textEmailAddress"
+                android:hint="Enter Name"
+                android:inputType="text"
                 android:padding="5dp"
+                android:textColor="#000"
                 android:textColorHint="@color/extraText"
-                android:textSize="18sp"
-                android:textColor="#000"/>
+                android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/password_head"
+                android:id="@+id/user_name_head"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/email_enter"
-                android:layout_marginTop="10dp"
+                android:layout_below="@+id/phuser_name_enter"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="User Name:"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/phuser_user_name_enter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/user_name_head"
+                android:background="@drawable/input"
+                android:hint="Enter User Name"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="#000"
+                android:textColorHint="@color/extraText"
+                android:textSize="18sp" />
+
+
+
+
+            <TextView
+                android:id="@+id/password_reg_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/phuser_user_name_enter"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:text="Password:"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/password_enter"
+                android:id="@+id/phuser_password_enter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/password_head"
+                android:layout_below="@+id/password_reg_head"
                 android:background="@drawable/input"
                 android:hint="********"
                 android:inputType="textPassword"
                 android:padding="5dp"
+                android:textColor="#000"
                 android:textColorHint="@color/extraText"
-                android:textSize="18sp"
-                android:textColor="#000"/>
+                android:textSize="18sp" />
 
             <Button
-                android:id="@+id/login_btn"
+                android:id="@+id/phuser_reg_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/password_enter"
+                android:layout_below="@+id/phuser_password_enter"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="70dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="70dp"
                 android:background="@drawable/buttons"
-                android:text="Login"
+                android:text="Register"
                 android:textColor="#000" />
 
-            <TextView
-                android:id="@+id/option"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/login_btn"
-                android:layout_marginTop="10dp"
-                android:text="OR"
-                android:textAlignment="center"
-                android:textColor="@color/extraText"
-                android:textSize="25sp" />
-
-            <Button
-                android:id="@+id/phone_login_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/option"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="50dp"
-                android:background="@drawable/buttons"
-                android:text="Login with Phone"
-                android:textColor="#000" />
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
