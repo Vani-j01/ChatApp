@@ -110,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 if (request_type.equals("sent")) {
                                     currentState = "request_sent";
                                     sendMessageRequestBtn.setText("Cancel Chat Request");
-                                } else if (request_type.equals("recieved")) {
+                                } else if (request_type.equals("received")) {
                                     currentState = "request_received";
                                     sendMessageRequestBtn.setText("Accept Chat Request");
 

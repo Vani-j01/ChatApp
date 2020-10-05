@@ -51,6 +51,33 @@
                 android:textAlignment="textStart"
                 android:textSize="16sp"
                 />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:id="@+id/request_accept_btn"
+                    android:text="Accept"
+                    android:textSize="16sp"
+                    android:background="@android:color/holo_green_light"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:id="@+id/request_reject_btn"
+                    android:text="Decline"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@android:color/holo_red_light"
+                    android:visibility="invisible"/>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
