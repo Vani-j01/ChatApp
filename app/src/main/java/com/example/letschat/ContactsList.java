@@ -2,6 +2,8 @@ package com.example.letschat;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class ContactsList {
 
 
@@ -9,7 +11,6 @@ public class ContactsList {
 
     public String name, status;
     public String TAG= "$$$";
-
 
     //Empty Constructor
     public  ContactsList(){
@@ -39,5 +40,7 @@ public class ContactsList {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
 
 }

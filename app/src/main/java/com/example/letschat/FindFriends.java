@@ -15,10 +15,13 @@ import android.widget.TextView;
 //import this to customize toolbar
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -28,14 +31,18 @@ public class FindFriends extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RecyclerView recyclerList;
-    private DatabaseReference UserReferrence;
+    private DatabaseReference UserReference;
+    private StorageReference UserProfileImageRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
 
-        UserReferrence = FirebaseDatabase.getInstance().getReference().child("Users");
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
+        UserReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
+        //Initializing the Recycler List that will display all the contacts
         recyclerList = findViewById(R.id.find_friends_recycleview);
         recyclerList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -54,7 +61,7 @@ public class FindFriends extends AppCompatActivity {
 
         FirebaseRecyclerOptions<ContactsList> options=
                 new FirebaseRecyclerOptions.Builder<ContactsList>()
-                .setQuery(UserReferrence, ContactsList.class)
+                .setQuery(UserReference, ContactsList.class)
                 .build();
 
         FirebaseRecyclerAdapter<ContactsList, FindFriendsViewHolder> adapter=
@@ -63,14 +70,20 @@ public class FindFriends extends AppCompatActivity {
                     protected void onBindViewHolder(@NonNull FindFriendsViewHolder holder, final int position, @NonNull ContactsList model) {
                         holder.username.setText(model.getName());
                         holder.userStatus.setText(model.getStatus());
-                        //Picasso.get().load(model.getImage()).into(holder.profileImage);
+                        final String visit_user_id;
+                        visit_user_id=getRef(position).getKey();
+                        GlideApp.with(FindFriends.this)
+                                .load(UserProfileImageRef.child(visit_user_id + ".jpg"))
+                                .fitCenter()
+                                .placeholder(R.drawable.user_image)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .into(holder.profileImage);
 
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                String visit_user_id;
-                                visit_user_id=getRef(position).getKey();
 
                                 Intent profileIntent = new Intent(FindFriends.this, ProfileActivity.class);
                                 profileIntent.putExtra("visit_user_id", visit_user_id);
@@ -97,14 +110,14 @@ public class FindFriends extends AppCompatActivity {
     public static class FindFriendsViewHolder extends RecyclerView.ViewHolder{
 
         TextView username, userStatus;
-        //CircleImageView profileImage;
+        CircleImageView profileImage;
 
         public FindFriendsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             username= itemView.findViewById(R.id.user_name);
             userStatus= itemView.findViewById(R.id.user_status);
-           // profileImage= itemView.findViewById(R.id.users_profile_image);
+            profileImage= itemView.findViewById(R.id.users_profile_image);
         }
     }
 

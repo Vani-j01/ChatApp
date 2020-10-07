@@ -1,33 +1,22 @@
 package com.example.letschat;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,28 +25,30 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+//import this to customize toolbar
+import androidx.appcompat.widget.Toolbar;
 
 public class Settings extends AppCompatActivity {
 
     private Button UpdateAccountSettings;
     private EditText userName, userStatus;
     private CircleImageView userDisplayImage;
-    private ImageView userdemoDisplayImage;
     private String currentUserId;
     private static final int GalleryPick = 1;
     private FirebaseAuth mAuth;
     private DatabaseReference RootReference;
     private StorageReference UserProfileImageRef;
     private ProgressDialog loadingBar;
+    Toolbar settingsToolbar;
+
 
 
     @Override
@@ -65,7 +56,16 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("profile Images");
+        //Setting up the Toolbar
+        settingsToolbar= (Toolbar) findViewById(R.id.settings_toolbar);
+        setSupportActionBar(settingsToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setTitle("Account Settings");
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserId = mAuth.getCurrentUser().getUid();
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
         loadingBar = new ProgressDialog(this);
         Initializing();
 
@@ -83,15 +83,29 @@ public class Settings extends AppCompatActivity {
         userDisplayImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setAspectRatio(1, 1)
-                        .start(Settings.this); // will use CROP_IMAGE_ACTIVITY_REQUEST_CODE
+
+                //Intent for opening images files from the phone
+                Intent i = new Intent(
+                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, GalleryPick);
 
             }
         });
     }
 
+
+    private void Initializing() {
+        UpdateAccountSettings = findViewById(R.id.update_settings);
+        userName = findViewById(R.id.display_name_enter);
+        userStatus = findViewById(R.id.status_enter);
+        userDisplayImage = (CircleImageView) findViewById(R.id.profile_image);
+        RootReference = FirebaseDatabase.getInstance().getReference();
+
+    }
+
+
+
+    //Method to Get user Data from Database and display it
     private void RetrieveUserData() {
 
         RootReference.child("Users").child(currentUserId)
@@ -99,17 +113,21 @@ public class Settings extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        //Checking if data exists
                         if ((snapshot.exists()) && (snapshot.hasChild("username")) && (snapshot.hasChild("image"))) {
 
                             String retrieveUserName = snapshot.child("username").getValue().toString();
                             String retrieveUserStatus = snapshot.child("status").getValue().toString();
-                            Object retrieveprofileImage = snapshot.child("image").getValue();
-
 
                             userName.setText(retrieveUserName);
                             userStatus.setText(retrieveUserStatus);
-
-
+                            GlideApp.with(Settings.this)
+                                    .load(UserProfileImageRef.child(currentUserId + ".jpg"))
+                                    .fitCenter()
+                                    .placeholder(R.drawable.user_image)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                    .into(userDisplayImage);
 
 
                         } else if ((snapshot.exists()) && (snapshot.hasChild("username"))) {
@@ -131,19 +149,10 @@ public class Settings extends AppCompatActivity {
     }
 
 
-    private void Initializing() {
-        UpdateAccountSettings = findViewById(R.id.update_settings);
-        userName = findViewById(R.id.display_name_enter);
-        userStatus = findViewById(R.id.status_enter);
-        userDisplayImage = (CircleImageView) findViewById(R.id.profile_image);
-        mAuth = FirebaseAuth.getInstance();
-        currentUserId = mAuth.getCurrentUser().getUid();
-        RootReference = FirebaseDatabase.getInstance().getReference();
 
 
-    }
-
-
+    //Method to update User info in Database
+    //Image updation not required as it saves automatically on selection
     private void updateSettings() {
         String setUserName = userName.getText().toString();
         String setUserStatus = userStatus.getText().toString();
@@ -161,12 +170,11 @@ public class Settings extends AppCompatActivity {
             profileMap.put("username", setUserName);
             profileMap.put("status", setUserStatus);
 
-            RootReference.child("Users").child(currentUserId).updateChildren(profileMap)
+            RootReference.child("Users").child(currentUserId).updateChildren(profileMap)    //Updating the child nodes
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                SendUserToMainActivity();
                                 Toast.makeText(Settings.this, "Profile Updated", Toast.LENGTH_SHORT).show();
                             } else {
                                 String error = task.getException().toString();
@@ -178,72 +186,53 @@ public class Settings extends AppCompatActivity {
         }
     }
 
-    private void SendUserToMainActivity() {
-        Intent mainIntent = new Intent(Settings.this, MainActivity.class);
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainIntent);
-        finish();
-    }
 
+    //Method to Crop and save image to database
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //Checking if an image has been chosen
+        //Allows only one image to be chosen
+        if (requestCode == GalleryPick && resultCode == RESULT_OK && data != null) {
+            Uri ImageUri = data.getData();
+
+            //Opening Activity to Crop the Image
+            CropImage.activity(ImageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1, 1)
+                    .start(this);
+        }
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
             if (resultCode == RESULT_OK) {
-                loadingBar.setTitle("Set Profile Image");
-                loadingBar.setMessage("Please wait while your Image is Uploading");
-                loadingBar.setCanceledOnTouchOutside(false);
-                loadingBar.show();
+                Uri resultUri = result.getUri();
 
-                final Uri resultUri = result.getUri();
-                Log.d("Setting", "onActivityResult: " + resultUri);
-
+                //Creating a file path for the image
+                //Use the same path each time for one user so that the previous image get's overridden by the new one
                 final StorageReference filePath = UserProfileImageRef.child(currentUserId + ".jpg");
-                mAuth = FirebaseAuth.getInstance();
-
-
-
 
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
                         if (task.isSuccessful()) {
-                            loadingBar.dismiss();
                             Toast.makeText(Settings.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
 
-                            final String downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
-
-                            RootReference.child("Users").child(currentUserId).child("image")
-                                    .setValue(resultUri)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                loadingBar.dismiss();
-                                                Toast.makeText(Settings.this, "Image Saved Successfully", Toast.LENGTH_SHORT).show();
-
-                                            } else {
-                                                loadingBar.dismiss();
-                                                String error = task.getException().toString();
-                                                Toast.makeText(Settings.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        }
-                                    });
+                            RetrieveUserData();
                         } else {
-                            loadingBar.dismiss();
                             String errormsg = task.getException().toString();
                             Toast.makeText(Settings.this, "Error:" + errormsg, Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                loadingBar.dismiss();
-                Exception error = result.getError();
-                Toast.makeText(Settings.this, "Error:" + error, Toast.LENGTH_SHORT).show();
             }
         }
+
+
     }
 
 

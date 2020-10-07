@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -29,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button sendMessageRequestBtn, declineRequestBtn;
     private DatabaseReference userReference, ChatRequestReference, ContactsReference;
     private FirebaseAuth mAuth;
+    private StorageReference UserProfileImageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class ProfileActivity extends AppCompatActivity {
         userReference= FirebaseDatabase.getInstance().getReference().child("Users");
         ChatRequestReference= FirebaseDatabase.getInstance().getReference().child("Chat Requests");
         ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts");
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
+
 
         //Receiving user ID from FindFriends Activity
         receivedUserId= getIntent().getExtras().get("visit_user_id").toString();
@@ -69,9 +75,15 @@ public class ProfileActivity extends AppCompatActivity {
                     String userName = snapshot.child("name").getValue().toString();
                     String userStatus = snapshot.child("status").getValue().toString();
 
-                    Picasso.get().load(userImage).placeholder(R.drawable.user_image).into(userProfileImage);
                     userProfileName.setText(userName);
                     userProfileStatus.setText(userStatus);
+                    GlideApp.with(ProfileActivity.this)
+                            .load(UserProfileImageRef.child(receivedUserId + ".jpg"))
+                            .fitCenter()
+                            .placeholder(R.drawable.user_image)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(userProfileImage);
 
                     ManageChatRequest();
                 }
@@ -191,6 +203,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+
+    //Removing a Contact that was already a in Friends List
     private void RemoveContact() {
         ContactsReference.child(currentUserId).child(receivedUserId)
                 .removeValue()
@@ -222,6 +236,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    //Accepting a Chat Request
     private void AcceptChatRequest() {
 
         ContactsReference.child(currentUserId).child(receivedUserId)
@@ -273,6 +288,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    //Canceling a Sent Chat Request
     private void CancelChatRequest() {
         ChatRequestReference.child(currentUserId).child(receivedUserId)
                 .removeValue()
@@ -305,6 +321,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+
+    //Sending a Chat Request
     private void SendChatRequest() {
         ChatRequestReference.child(currentUserId).child(receivedUserId)
                 .child("request_type").setValue("sent")
