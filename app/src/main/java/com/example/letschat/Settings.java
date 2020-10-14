@@ -221,6 +221,9 @@ public class Settings extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(Settings.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
 
+                            RootReference.child("Users").child(currentUserId).child("image")
+                                    .setValue("Has Profile Image");
+
                             RetrieveUserData();
                         } else {
                             String errormsg = task.getException().toString();

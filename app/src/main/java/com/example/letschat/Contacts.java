@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,6 +47,7 @@ public class Contacts extends Fragment {
     private RecyclerView mContactList;
     private DatabaseReference ContactsReference, UserReference;
     private FirebaseAuth mAuth;
+    private StorageReference UserProfileImageRef;
     String currentUser;
 
 
@@ -91,6 +95,7 @@ public class Contacts extends Fragment {
        currentUser = mAuth.getCurrentUser().getUid().toString();
         ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUser);
        UserReference= FirebaseDatabase.getInstance().getReference().child("Users");
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
        return ContactView;
     }
@@ -108,27 +113,31 @@ public class Contacts extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, int position, @NonNull ContactsList model) {
 
-                        String users_ids= getRef(position).getKey();
+                        final String users_ids= getRef(position).getKey();
                         UserReference.child(users_ids).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                 if(snapshot.hasChild("image")){
                                     String profileimage= snapshot.child("image").getValue().toString();
-                                    String profileName= snapshot.child("name").getValue().toString();
-                                    String profileStatus= snapshot.child("status").getValue().toString();
 
-                                    holder.userName.setText(profileName);
-                                    holder.userStatus.setText(profileStatus);
+                                    GlideApp.with(getContext())
+                                            .load(UserProfileImageRef.child(users_ids + ".jpg"))
+                                            .fitCenter()
+                                            .placeholder(R.drawable.user_image)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                            .into(holder.userImage);
+
                                     //Picasso.get().load(profileimage).into(holder.profileImage)
                                 }
-                                else{
+
                                     String profileName= snapshot.child("name").getValue().toString();
                                     String profileStatus= snapshot.child("status").getValue().toString();
 
                                     holder.userName.setText(profileName);
                                     holder.userStatus.setText(profileStatus);
-                                }
+
                             }
 
                             @Override
@@ -156,13 +165,13 @@ public class Contacts extends Fragment {
     public static class ContactsViewHolder extends RecyclerView.ViewHolder{
 
         TextView userName, userStatus;
-        CircleImageView profileImage;
+        CircleImageView userImage;
         public ContactsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             userName = itemView.findViewById(R.id.user_name);
             userStatus= itemView.findViewById(R.id.user_status);
-            //Add for Image
+           userImage= itemView.findViewById(R.id.users_profile_image);
         }
     }
 }
