@@ -20,6 +20,8 @@ Chating App Made Using : Androidx and Firebase
 ## Libraries Used
 - [FirebaseUI - UI bindings for Android](https://github.com/firebase/FirebaseUI-Android)
 - [Circle Image View](https://github.com/hdodenhof/CircleImageView)
+- [Glide v4](https://github.com/bumptech/glide)
+- [Android Image Cropper](https://github.com/ArthurHub/Android-Image-Cropper)
 
 
 
