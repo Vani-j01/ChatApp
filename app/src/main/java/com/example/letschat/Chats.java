@@ -140,6 +140,27 @@ public class Chats extends Fragment {
                                     holder.userName.setText(profileName);
                                     holder.userStatus.setText("Last Seen:" + "\n" + "Date" + " Time");
 
+
+                                    //getting user state and last seen time
+                                    if (snapshot.child("userState").hasChild("state")) {
+                                        String state = snapshot.child("userState").child("state").getValue().toString();
+                                        String date = snapshot.child("userState").child("date").getValue().toString();
+                                        String time = snapshot.child("userState").child("time").getValue().toString();
+
+                                        if (state.equals("online")){
+                                            holder.userStatus.setText("online");
+                                        }
+                                        else if (state.equals("offline")){
+                                            holder.userStatus.setText("Last Seen:" + "\n" + date+ " " + time);
+                                        }
+                                    }
+                                    //if user has not updated the app or somehow has not got his info stored
+                                    else {
+                                        holder.userStatus.setText("Last Seen:" + "\n" + "Date" + " Time");
+
+                                    }
+
+
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {

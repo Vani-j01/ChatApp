@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -118,6 +119,7 @@ public class Contacts extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                                if (snapshot.exists()){
                                 if(snapshot.hasChild("image")){
                                     String profileimage= snapshot.child("image").getValue().toString();
 
@@ -138,6 +140,28 @@ public class Contacts extends Fragment {
                                     holder.userName.setText(profileName);
                                     holder.userStatus.setText(profileStatus);
 
+                                    //Displaying Online Status
+                                    //getting user state and last seen time
+                                    if (snapshot.child("userState").hasChild("state")) {
+                                        String state = snapshot.child("userState").child("state").getValue().toString();
+                                        String date = snapshot.child("userState").child("date").getValue().toString();
+                                        String time = snapshot.child("userState").child("time").getValue().toString();
+
+                                        if (state.equals("online")){
+                                            holder.onlineIcon.setVisibility(View.VISIBLE);
+                                        }
+                                        else if (state.equals("offline")){
+                                            holder.onlineIcon.setVisibility(View.INVISIBLE);
+                                        }
+                                    }
+                                    //if user has not updated the app or somehow has not got his info stored
+                                    else {
+                                        holder.onlineIcon.setVisibility(View.INVISIBLE);
+
+                                    }
+
+
+                                }
                             }
 
                             @Override
@@ -166,12 +190,14 @@ public class Contacts extends Fragment {
 
         TextView userName, userStatus;
         CircleImageView userImage;
+        ImageView onlineIcon;
         public ContactsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             userName = itemView.findViewById(R.id.user_name);
             userStatus= itemView.findViewById(R.id.user_status);
            userImage= itemView.findViewById(R.id.users_profile_image);
+           onlineIcon = itemView.findViewById(R.id.online_status);
         }
     }
 }
