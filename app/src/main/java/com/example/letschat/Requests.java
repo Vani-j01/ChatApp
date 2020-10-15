@@ -235,6 +235,80 @@ ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts
                                             }
                                         });
                                     }
+
+                                    //Displaying the Sent requests
+                                    else if (type.equals("sent")){
+                                        //To show that you sent a request
+                                        Button request_sent_btn = holder.itemView.findViewById(R.id.request_accept_btn);
+                                        request_sent_btn.setText("Request Sent");
+
+                                        //Hidding this button
+                                        holder.itemView.findViewById(R.id.request_reject_btn).setVisibility(View.INVISIBLE);
+
+                                        UserReference.child(users_ids).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                                if (snapshot.hasChild("image")) {
+                                                    String profileimage = snapshot.child("image").getValue().toString();
+
+                                                    //Picasso.get().load(profileimage).into(holder.profileImage)
+                                                }
+
+                                                //Name of whom request has been sent
+                                                final String profileName = snapshot.child("name").getValue().toString();
+
+                                                holder.userName.setText(profileName);
+                                                holder.userStatus.setText("you have sent request to: "+profileName );
+
+                                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        CharSequence options[]= new CharSequence[]
+                                                                {
+                                                                        "Cancel Chat Request"
+                                                                };
+                                                        AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
+                                                        builder.setTitle( "Already Sent a Request");
+                                                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                                //Cancelling the sent Request
+                                                                if (which == 0){
+                                                                    ChatRequestReference.child(currentUser).child(users_ids).removeValue()
+                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    if (task.isSuccessful()){
+                                                                                        ChatRequestReference.child(users_ids).child(currentUser).removeValue()
+                                                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                    @Override
+                                                                                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                                                                                        if (task.isSuccessful()){
+                                                                                                            Toast.makeText(getContext(), "Request Canceled", Toast.LENGTH_SHORT).show();
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+                                                        });
+                                                        builder.show();
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+
+                                    }
                                 }
 
 

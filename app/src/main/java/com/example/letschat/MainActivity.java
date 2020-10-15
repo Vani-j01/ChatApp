@@ -32,6 +32,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentuser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootReference;
+    private String currentUserId;
 
 
     @Override
@@ -79,9 +84,31 @@ public class MainActivity extends AppCompatActivity {
         if (currentuser == null) {
             SendUserToLoginActivity();
         } else {
+            //Updating State
+            updateUserStatus("online");
+
             VerifyUserExistance();
         }
     }
+
+    //Updating State if the app is minimized or crashed
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (currentuser != null){
+            updateUserStatus("offline");
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (currentuser != null){
+            updateUserStatus("offline");
+        }
+    }
+
 
 
     private void VerifyUserExistance() {
@@ -193,5 +220,30 @@ public class MainActivity extends AppCompatActivity {
                 });
         RootReference.child("Groups").child(groupName).setValue("messageKey", "");
 
+    }
+
+
+    //To store user's online or offline state
+    private void updateUserStatus(String state){
+        String saveCurrentTime, saveCurrentDate;
+
+        //fetching current date and time
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        //Storing data to database
+        HashMap<String, Object> onlineStateMap= new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date",saveCurrentDate);
+        onlineStateMap.put("state",state);
+
+        currentUserId= mAuth.getCurrentUser().getUid();
+
+        RootReference.child("Users").child(currentUserId).child("userState")
+                .updateChildren(onlineStateMap);
     }
 }

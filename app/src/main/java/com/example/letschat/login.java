@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,9 +126,22 @@ public class login extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                ((LoginActivity) getActivity()).SendUserToMainActivity();
-                                Toast.makeText(getActivity(), "Logged In Successfully", Toast.LENGTH_SHORT).show();
-                                progressBar.dismiss();
+
+                                String currentUserId =mAuth.getCurrentUser().getUid();
+                                String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                                RootReference.child("Users").child(currentUserId).child("device_token").setValue(deviceToken)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    ((LoginActivity) getActivity()).SendUserToMainActivity();
+                                                    Toast.makeText(getActivity(), "Logged In Successfully", Toast.LENGTH_SHORT).show();
+                                                    progressBar.dismiss();
+                                                }
+                                            }
+                                        });
+
+
 
                             } else {
                                 String error_msg = task.getException().toString();

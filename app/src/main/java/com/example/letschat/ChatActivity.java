@@ -128,7 +128,6 @@ public class ChatActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         Log.i("Chat Activity", "Started");
-        Toast.makeText(this,"Started", Toast.LENGTH_SHORT).show();
 
              listener = new ChildEventListener()
                 {
@@ -139,6 +138,9 @@ public class ChatActivity extends AppCompatActivity {
                         Messages messages = snapshot.getValue(Messages.class);
                         messagesList.add(messages);
                         messagesAdapter.notifyDataSetChanged();
+
+                        //Auto Scroll
+                        userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
                     }
 
                     @Override

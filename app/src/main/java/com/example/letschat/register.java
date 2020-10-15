@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -140,6 +141,9 @@ public class register extends Fragment {
 
                             if (task.isSuccessful()) {
                                 String currentUserID = mAuth.getCurrentUser().getUid();
+                                String device_token = FirebaseInstanceId.getInstance().getToken();
+
+
                                 final HashMap<String, String> profileMap = new HashMap<>();
                                 profileMap.put("name", UserName);
                                 profileMap.put("email", UserEmail);
@@ -147,6 +151,7 @@ public class register extends Fragment {
                                 profileMap.put("username", UserUsername);
                                 profileMap.put("uid", currentUserID);
                                 profileMap.put("status", "Available");
+                                profileMap.put("device_token", device_token);
                                 Rootrefference.child("Users").child(currentUserID).setValue(profileMap);
 
                                 Toast.makeText(getActivity(), "Account Created Successfully", Toast.LENGTH_SHORT).show();

@@ -62,6 +62,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:padding="5dp"
                     android:id="@+id/request_accept_btn"
                     android:text="Accept"
                     android:textSize="16sp"
@@ -71,6 +72,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:padding="5dp"
                     android:id="@+id/request_reject_btn"
                     android:text="Decline"
                     android:textSize="16sp"
