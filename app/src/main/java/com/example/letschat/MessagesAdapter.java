@@ -66,6 +66,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             messageReceiverImage= (ImageView) itemView.findViewById(R.id.message_receiver_image_view);
             messageSenderImage= (ImageView) itemView.findViewById(R.id.message_sender_image_view);
         }
+
+
     }
 
 
@@ -87,10 +89,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     String messageSenderID= mAuth.getCurrentUser().getUid();
     Messages messages = userMessagesList.get(position);
 
+        //Setting the image
+        MyAppGlideModule obj = new MyAppGlideModule();
+        obj.setImage(messages.getFrom(),holder.receiverProfileImage);
+
     String fromUserID= messages.getFrom();
     String fromMessageType = messages.getType();
 
-        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(fromUserID);
 
     userRef.addValueEventListener(new ValueEventListener() {

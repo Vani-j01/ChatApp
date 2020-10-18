@@ -72,13 +72,10 @@ public class FindFriends extends AppCompatActivity {
                         holder.userStatus.setText(model.getStatus());
                         final String visit_user_id;
                         visit_user_id=getRef(position).getKey();
-                        GlideApp.with(FindFriends.this)
-                                .load(UserProfileImageRef.child(visit_user_id + ".jpg"))
-                                .fitCenter()
-                                .placeholder(R.drawable.user_image)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(holder.profileImage);
+
+                        //Setting the image
+                        MyAppGlideModule obj = new MyAppGlideModule();
+                        obj.setImage(visit_user_id,holder.profileImage);
 
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {

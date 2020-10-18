@@ -1,6 +1,8 @@
 package com.example.letschat;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.security.AccessControlContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +38,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 //import this to customize toolbar
 import androidx.appcompat.widget.Toolbar;
+
+import static java.security.AccessController.getContext;
 
 public class Settings extends AppCompatActivity {
 
@@ -121,13 +126,10 @@ public class Settings extends AppCompatActivity {
 
                             userName.setText(retrieveUserName);
                             userStatus.setText(retrieveUserStatus);
-                            GlideApp.with(Settings.this)
-                                    .load(UserProfileImageRef.child(currentUserId + ".jpg"))
-                                    .fitCenter()
-                                    .placeholder(R.drawable.user_image)
-                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .skipMemoryCache(true)
-                                    .into(userDisplayImage);
+
+                            //Setting the image
+                            MyAppGlideModule obj = new MyAppGlideModule();
+                            obj.setImage(currentUserId, userDisplayImage);
 
 
                         } else if ((snapshot.exists()) && (snapshot.hasChild("username"))) {

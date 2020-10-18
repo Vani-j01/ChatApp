@@ -98,7 +98,9 @@ public class Requests extends Fragment {
         currentUser = mAuth.getCurrentUser().getUid().toString();
         ChatRequestReference = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
         UserReference = FirebaseDatabase.getInstance().getReference().child("Users");
-ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts");
+        ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts");
+
+
 
         return RequestFragView;
     }
@@ -139,6 +141,9 @@ ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts
                                                 if (snapshot.hasChild("image")) {
                                                     String profileimage = snapshot.child("image").getValue().toString();
 
+                                                    //Setting the image
+                                                    MyAppGlideModule obj = new MyAppGlideModule();
+                                                    obj.setImage(users_ids,holder.profileImage);
                                                     //Picasso.get().load(profileimage).into(holder.profileImage)
                                                 }
 
@@ -252,6 +257,10 @@ ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts
                                                 if (snapshot.hasChild("image")) {
                                                     String profileimage = snapshot.child("image").getValue().toString();
 
+                                                    //Setting the image
+                                                    MyAppGlideModule obj = new MyAppGlideModule();
+                                                    obj.setImage(users_ids,holder.profileImage);
+
                                                     //Picasso.get().load(profileimage).into(holder.profileImage)
                                                 }
 
@@ -346,6 +355,7 @@ ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts
 
             userName = itemView.findViewById(R.id.user_name);
             userStatus = itemView.findViewById(R.id.user_status);
+            profileImage= itemView.findViewById(R.id.users_profile_image);
             //Add for Image
 
             accept_btn = itemView.findViewById(R.id.request_accept_btn);

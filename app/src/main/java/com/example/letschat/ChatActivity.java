@@ -113,8 +113,8 @@ public class ChatActivity extends AppCompatActivity {
         userName = findViewById(R.id.chatbar_user_name);
         userLastSeen= findViewById(R.id.chatbar_user_lastseen);
         userImage= findViewById(R.id.chatbar_user_image);
-        sendMessageButton=(ImageButton) findViewById(R.id.chat_send_message_btn);
-        sendFilesButton=(ImageButton) findViewById(R.id.chat_send_file_btn);
+        sendMessageButton= findViewById(R.id.chat_send_message_btn);
+        sendFilesButton= findViewById(R.id.chat_send_file_btn);
         messageInputText= findViewById(R.id.input_message);
         loadingBar = new ProgressDialog(this);
 
@@ -133,14 +133,10 @@ public class ChatActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
+        //Setting the image
+        MyAppGlideModule obj = new MyAppGlideModule();
+        obj.setImage(messageReceiverID, userImage);
 
-        GlideApp.with(ChatActivity.this)
-                .load(UserProfileImageRef.child(messageReceiverID + ".jpg"))
-                .fitCenter()
-                .placeholder(R.drawable.user_image)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(userImage);
 
         userName.setText(messageReceiverName);
 

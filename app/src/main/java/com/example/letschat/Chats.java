@@ -125,13 +125,10 @@ public class Chats extends Fragment {
                                     if (snapshot.hasChild("image")) {
                                         String profileimage = snapshot.child("image").getValue().toString();
 
-                                        GlideApp.with(getContext())
-                                                .load(UserProfileImageRef.child(usersIds + ".jpg"))
-                                                .fitCenter()
-                                                .placeholder(R.drawable.user_image)
-                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                .skipMemoryCache(true)
-                                                .into(holder.userImage);
+                                        //Setting the image
+                                        MyAppGlideModule obj = new MyAppGlideModule();
+                                        obj.setImage(usersIds,holder.userImage);
+
 
                                     }
 

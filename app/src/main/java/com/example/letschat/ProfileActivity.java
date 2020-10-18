@@ -79,13 +79,18 @@ public class ProfileActivity extends AppCompatActivity {
 
                     userProfileName.setText(userName);
                     userProfileStatus.setText(userStatus);
-                    GlideApp.with(ProfileActivity.this)
+
+                    //Setting the image
+                    MyAppGlideModule obj = new MyAppGlideModule();
+                    obj.setImage(receivedUserId,userProfileImage);
+
+                   /* GlideApp.with(ProfileActivity.this)
                             .load(UserProfileImageRef.child(receivedUserId + ".jpg"))
                             .fitCenter()
                             .placeholder(R.drawable.user_image)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .into(userProfileImage);
+                            .into(userProfileImage);*/
 
                     ManageChatRequest();
                 }

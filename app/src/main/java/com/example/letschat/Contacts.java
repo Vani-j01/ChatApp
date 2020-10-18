@@ -123,15 +123,10 @@ public class Contacts extends Fragment {
                                 if(snapshot.hasChild("image")){
                                     String profileimage= snapshot.child("image").getValue().toString();
 
-                                    GlideApp.with(getContext())
-                                            .load(UserProfileImageRef.child(users_ids + ".jpg"))
-                                            .fitCenter()
-                                            .placeholder(R.drawable.user_image)
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .skipMemoryCache(true)
-                                            .into(holder.userImage);
+                                    //Setting the image
+                                    MyAppGlideModule obj = new MyAppGlideModule();
+                                    obj.setImage(users_ids,holder.userImage);
 
-                                    //Picasso.get().load(profileimage).into(holder.profileImage)
                                 }
 
                                     String profileName= snapshot.child("name").getValue().toString();
