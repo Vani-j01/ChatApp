@@ -53,7 +53,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     public class MessageViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView senderMessageText, receiverMessageText;
+        public TextView senderMessageText, receiverMessageText, senderFile, receiverFile;
         public CircleImageView receiverProfileImage;
         public ImageView messageSenderImage, messageReceiverImage;
 
@@ -65,6 +65,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             receiverProfileImage=(CircleImageView) itemView.findViewById(R.id.message_profile_image);
             messageReceiverImage= (ImageView) itemView.findViewById(R.id.message_receiver_image_view);
             messageSenderImage= (ImageView) itemView.findViewById(R.id.message_sender_image_view);
+            senderFile= (TextView) itemView.findViewById(R.id.message_sender_file);
+            receiverFile= (TextView) itemView.findViewById(R.id.message_receiver_file);
         }
 
 
@@ -87,11 +89,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     @Override
     public void onBindViewHolder(@NonNull final MessageViewHolder holder, final int position) {
     String messageSenderID= mAuth.getCurrentUser().getUid();
-    Messages messages = userMessagesList.get(position);
+    final Messages messages = userMessagesList.get(position);
 
-        //Setting the image
-        MyAppGlideModule obj = new MyAppGlideModule();
-        obj.setImage(messages.getFrom(),holder.receiverProfileImage);
 
     String fromUserID= messages.getFrom();
     String fromMessageType = messages.getType();
@@ -102,6 +101,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             if (snapshot.hasChild("image")){
+                //Setting the image
+                MyAppGlideModule obj = new MyAppGlideModule();
+                obj.setImage(messages.getFrom(),holder.receiverProfileImage);
 
             }
         }
@@ -118,19 +120,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         holder.senderMessageText.setVisibility(View.GONE);
         holder.messageSenderImage.setVisibility(View.GONE);
         holder.messageReceiverImage.setVisibility(View.GONE);
+        holder.senderFile.setVisibility(View.GONE);
+        holder.receiverFile.setVisibility(View.GONE);
 
     if (fromMessageType.equals("text")){
+        String s= messages.getMessage()+ "\n\n" + messages.getTime()+ " - " + messages.getDate();
 
         if (fromUserID.equals(messageSenderID)){
             holder.senderMessageText.setVisibility(View.VISIBLE);
             holder.senderMessageText.setBackgroundResource(R.drawable.sender_message_layout);
-            holder.senderMessageText.setText(messages.getMessage()+ "\n\n" + messages.getTime()+ " - " + messages.getDate());
+            holder.senderMessageText.setText(s);
         }
         else {
             holder.receiverProfileImage.setVisibility(View.VISIBLE);
             holder.receiverMessageText.setVisibility(View.VISIBLE);
             holder.receiverMessageText.setBackgroundResource(R.drawable.receiver_message_layout);
-            holder.receiverMessageText.setText(messages.getMessage()+ "\n\n" + messages.getTime()+ " - " + messages.getDate());
+            holder.receiverMessageText.setText(s);
         }
     }
 
@@ -150,15 +155,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     else {
         if (fromUserID.equals(messageSenderID)){
-            holder.messageSenderImage.setVisibility(View.VISIBLE);
-            holder.messageSenderImage.setBackgroundResource(R.drawable.email);
+
+            holder.senderFile.setVisibility(View.VISIBLE);
+            holder.senderFile.setBackgroundResource(R.drawable.sender_message_layout);
+
 
         }
         else if (fromMessageType.equals("pdf") || fromMessageType.equals("docx")){
-            holder.messageReceiverImage.setVisibility(View.VISIBLE);
+
+            holder.receiverFile.setVisibility(View.VISIBLE);
+            holder.receiverFile.setBackgroundResource(R.drawable.receiver_message_layout);
             holder.receiverProfileImage.setVisibility(View.VISIBLE);
 
-            holder.messageReceiverImage.setBackgroundResource(R.drawable.email);
         }
     }
 
@@ -245,6 +253,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                                 Intent intent= new Intent(holder.itemView.getContext(),ImageViewerActivity.class);
                                 intent.putExtra("url",userMessagesList.get(position).getMessage());
                                 holder.itemView.getContext().startActivity(intent);
+
                             }
                             else if (which==3){
                                 deleteMessagesforEveryone(position, holder);
@@ -268,7 +277,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                     CharSequence options[] = new CharSequence[]
                             {
                                     "Delete for me",
-                                    "Download and view this aDocument",
+                                    "Download and view this Document",
                                     "Cancel"
                             };
 

@@ -32,6 +32,7 @@ public class MyAppGlideModule extends AppGlideModule {
     public void setImage( String id, CircleImageView view) {
         StorageReference UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
+
         //use getContext in the same way as we used activity.this
         GlideApp.with(view.getContext())
                 .load(UserProfileImageRef.child(id + ".jpg"))

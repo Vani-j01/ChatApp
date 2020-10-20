@@ -61,6 +61,7 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+
         //Setting up the Toolbar
         settingsToolbar= (Toolbar) findViewById(R.id.settings_toolbar);
         setSupportActionBar(settingsToolbar);
@@ -107,7 +108,6 @@ public class Settings extends AppCompatActivity {
         RootReference = FirebaseDatabase.getInstance().getReference();
 
     }
-
 
 
     //Method to Get user Data from Database and display it

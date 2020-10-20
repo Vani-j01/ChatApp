@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //To store user's online or offline state
-    private void updateUserStatus(String state){
+    public void updateUserStatus(String state){
         String saveCurrentTime, saveCurrentDate;
 
         //fetching current date and time

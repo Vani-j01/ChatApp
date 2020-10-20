@@ -59,6 +59,7 @@ public class FindFriends extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         FirebaseRecyclerOptions<ContactsList> options=
                 new FirebaseRecyclerOptions.Builder<ContactsList>()
                 .setQuery(UserReference, ContactsList.class)
@@ -72,6 +73,8 @@ public class FindFriends extends AppCompatActivity {
                         holder.userStatus.setText(model.getStatus());
                         final String visit_user_id;
                         visit_user_id=getRef(position).getKey();
+
+
 
                         //Setting the image
                         MyAppGlideModule obj = new MyAppGlideModule();
