@@ -42,7 +42,7 @@
         android:padding="15dp"
         android:layout_marginStart="2dp"
         android:textSize="14sp"
-        app:drawableLeftCompat="@drawable/email" />
+        app:drawableLeftCompat="@drawable/docfile" />
 
     <ImageView
         android:id="@+id/message_sender_image_view"
@@ -85,7 +85,7 @@
         android:text="CLick here to view the file"
         android:textSize="14sp"
         android:padding="10dp"
-        app:drawableLeftCompat="@drawable/email" />
+        app:drawableLeftCompat="@drawable/docfile" />
 
 
 </RelativeLayout>

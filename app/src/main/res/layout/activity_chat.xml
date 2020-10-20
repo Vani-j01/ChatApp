@@ -69,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/input"
-                android:src="@android:drawable/ic_menu_send"
+                android:src="@drawable/addfile"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/guideline5"
                 app:layout_constraintEnd_toStartOf="@+id/chat_send_message_btn"

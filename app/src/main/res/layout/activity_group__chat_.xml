@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/input"
-            android:src="@android:drawable/ic_menu_send"
+            android:src="@drawable/addfile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/group_chat_sendmsg_btn"
             app:layout_constraintStart_toStartOf="@+id/guideline4"
