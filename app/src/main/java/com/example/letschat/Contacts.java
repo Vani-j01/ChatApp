@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class Contacts extends Fragment {
     private DatabaseReference ContactsReference, UserReference;
     private FirebaseAuth mAuth;
     private StorageReference UserProfileImageRef;
+    private TextView default_text;
     String currentUser;
 
 
@@ -92,6 +94,8 @@ public class Contacts extends Fragment {
        mContactList = ContactView.findViewById(R.id.contacts_list);
        mContactList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+       default_text= ContactView.findViewById(R.id.contacts_frag_default_message);
+
        mAuth = FirebaseAuth.getInstance();
        currentUser = mAuth.getCurrentUser().getUid().toString();
         ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUser);
@@ -114,6 +118,8 @@ public class Contacts extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, int position, @NonNull ContactsList model) {
 
+                        default_text.setVisibility(View.GONE);
+
                         final String users_ids= getRef(position).getKey();
                         UserReference.child(users_ids).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -124,8 +130,17 @@ public class Contacts extends Fragment {
                                     String profileimage= snapshot.child("image").getValue().toString();
 
                                     //Setting the image
-                                    MyAppGlideModule obj = new MyAppGlideModule();
-                                    obj.setImage(users_ids,holder.userImage);
+//                                    MyAppGlideModule obj = new MyAppGlideModule();
+//                                    obj.setImage(users_ids,holder.userImage);
+
+
+                                    GlideApp.with(holder.userImage.getContext())
+                                            .load(UserProfileImageRef.child(users_ids+ ".jpg"))
+                                            .fitCenter()
+                                            .placeholder(R.drawable.user_image)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                            .into(holder.userImage);
 
                                 }
 
@@ -178,6 +193,16 @@ public class Contacts extends Fragment {
 
         mContactList.setAdapter(adapter);
         adapter.startListening();
+
+
+        //Checking if the recycler view is empty
+        if (adapter.getItemCount()<=0){
+            Log.e("TAG", "onStart: "+ adapter.getItemCount() );
+            default_text.setVisibility(View.VISIBLE);
+        }
+        else{
+            default_text.setVisibility(View.INVISIBLE);
+        }
 
     }
 

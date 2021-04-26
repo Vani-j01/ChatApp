@@ -6,6 +6,17 @@
     tools:context=".Requests">
 
 
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/requests_frag_default_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_margin="20dp"
+        android:background="@drawable/sender_message_layout"
+        android:padding="5dp"
+        android:text="You have not sent nor received any requests right now. Go to Find Friends and Start sending people chat requests!!"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/requests_list"
         android:layout_width="match_parent"

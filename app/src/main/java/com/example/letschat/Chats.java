@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class Chats extends Fragment {
     private String mParam2;
 
     private  View ChatsView;
+    private TextView default_message;
     private RecyclerView chat_list;
     private String currentUserId;
 
@@ -96,6 +98,8 @@ public class Chats extends Fragment {
 
         chat_list = ChatsView.findViewById(R.id.chats_list);
         chat_list.setLayoutManager(new LinearLayoutManager(getContext()));
+        default_message= ChatsView.findViewById(R.id.chat_frag_default_message);
+
 
         return ChatsView;
     }
@@ -115,6 +119,8 @@ public class Chats extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull ContactsList model) {
 
+                        default_message.setVisibility(View.GONE);
+
                         final String usersIds = getRef(position).getKey();
 
                         users_Reference.child(usersIds).addValueEventListener(new ValueEventListener() {
@@ -126,8 +132,17 @@ public class Chats extends Fragment {
                                         String profileimage = snapshot.child("image").getValue().toString();
 
                                         //Setting the image
-                                        MyAppGlideModule obj = new MyAppGlideModule();
-                                        obj.setImage(usersIds,holder.userImage);
+                                      //  MyAppGlideModule obj = new MyAppGlideModule();
+                                       //0 obj.setImage(usersIds,holder.userImage);
+
+
+                                        GlideApp.with(getContext())
+                                                .load(UserProfileImageRef.child(usersIds + ".jpg"))
+                                                .fitCenter()
+                                                .placeholder(R.drawable.user_image)
+                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                .skipMemoryCache(true)
+                                                .into(holder.userImage);
 
 
                                     }
@@ -191,6 +206,17 @@ public class Chats extends Fragment {
 
         chat_list.setAdapter(adapter);
         adapter.startListening();
+
+        //Checking if the recycler view is empty
+        if (adapter.getItemCount()<=0){
+            Log.e("TAG", "onStart: "+ adapter.getItemCount() );
+            default_message.setVisibility(View.VISIBLE);
+        }
+        else{
+            default_message.setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
 

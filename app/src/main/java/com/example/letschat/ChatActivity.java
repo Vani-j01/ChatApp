@@ -134,8 +134,16 @@ public class ChatActivity extends AppCompatActivity {
         saveCurrentTime = currentTime.format(calendar.getTime());
 
         //Setting the image
-        MyAppGlideModule obj = new MyAppGlideModule();
-        obj.setImage(messageReceiverID, userImage);
+//        MyAppGlideModule obj = new MyAppGlideModule();
+//        obj.setImage(messageReceiverID, userImage);
+
+        GlideApp.with(getApplicationContext())
+                .load(UserProfileImageRef.child(messageReceiverID + ".jpg"))
+                .fitCenter()
+                .placeholder(R.drawable.user_image)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(userImage);
 
 
         userName.setText(messageReceiverName);

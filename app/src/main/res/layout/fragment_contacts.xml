@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".Contacts">
 
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/contacts_frag_default_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_margin="20dp"
+        android:background="@drawable/sender_message_layout"
+        android:padding="5dp"
+        android:text="You have no friends to chat with right now. Go to Find Friends and Start sending people chat requests!!"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contacts_list"

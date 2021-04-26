@@ -61,6 +61,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/group_chat_sendfile_btn"
             android:layout_width="0dp"
             android:layout_height="0dp"

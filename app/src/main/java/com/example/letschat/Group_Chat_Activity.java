@@ -152,6 +152,7 @@ public class Group_Chat_Activity extends AppCompatActivity {
         };
 
         GroupNameReference.addChildEventListener(listener);
+
     }
 
 

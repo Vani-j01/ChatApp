@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,10 +50,12 @@ public class Requests extends Fragment {
     private String mParam2;
 
     private View RequestFragView;
+    private TextView default_message;
 
     private DatabaseReference UserReference;
     private DatabaseReference ChatRequestReference, ContactsReference;
     private FirebaseAuth mAuth;
+    StorageReference UserProfileImageRef;
     String currentUser;
 
     private RecyclerView mRequestList;
@@ -94,11 +100,14 @@ public class Requests extends Fragment {
         mRequestList = RequestFragView.findViewById(R.id.requests_list);
         mRequestList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        default_message= RequestFragView.findViewById(R.id.requests_frag_default_message);
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser().getUid().toString();
         ChatRequestReference = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
         UserReference = FirebaseDatabase.getInstance().getReference().child("Users");
         ContactsReference= FirebaseDatabase.getInstance().getReference().child("Contacts");
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
 
 
@@ -121,6 +130,7 @@ public class Requests extends Fragment {
 
                         holder.itemView.findViewById(R.id.request_accept_btn).setVisibility(View.VISIBLE);
                         holder.itemView.findViewById(R.id.request_reject_btn).setVisibility(View.VISIBLE);
+                        default_message.setVisibility(View.GONE);
 
                         final String users_ids = getRef(position).getKey();
 
@@ -142,9 +152,20 @@ public class Requests extends Fragment {
                                                     String profileimage = snapshot.child("image").getValue().toString();
 
                                                     //Setting the image
-                                                    MyAppGlideModule obj = new MyAppGlideModule();
-                                                    obj.setImage(users_ids,holder.profileImage);
+//                                                    MyAppGlideModule obj = new MyAppGlideModule();
+//                                                    obj.setImage(users_ids,holder.profileImage);
                                                     //Picasso.get().load(profileimage).into(holder.profileImage)
+
+
+                                                    GlideApp.with(holder.profileImage.getContext())
+                                                            .load(UserProfileImageRef.child(users_ids + ".jpg"))
+                                                            .fitCenter()
+                                                            .placeholder(R.drawable.user_image)
+                                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                            .skipMemoryCache(true)
+                                                            .into(holder.profileImage);
+
+
                                                 }
 
                                                 final String profileName = snapshot.child("name").getValue().toString();
@@ -258,10 +279,17 @@ public class Requests extends Fragment {
                                                     String profileimage = snapshot.child("image").getValue().toString();
 
                                                     //Setting the image
-                                                    MyAppGlideModule obj = new MyAppGlideModule();
-                                                    obj.setImage(users_ids,holder.profileImage);
+//                                                    MyAppGlideModule obj = new MyAppGlideModule();
+//                                                    obj.setImage(users_ids,holder.profileImage);
 
-                                                    //Picasso.get().load(profileimage).into(holder.profileImage)
+                                                    GlideApp.with(holder.profileImage.getContext())
+                                                            .load(UserProfileImageRef.child(users_ids + ".jpg"))
+                                                            .fitCenter()
+                                                            .placeholder(R.drawable.user_image)
+                                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                            .skipMemoryCache(true)
+                                                            .into(holder.profileImage);
+
                                                 }
 
                                                 //Name of whom request has been sent
@@ -341,6 +369,16 @@ public class Requests extends Fragment {
 
         mRequestList.setAdapter(adapter);
         adapter.startListening();
+
+
+        //Checking if the recycler view is empty
+        if (adapter.getItemCount()==0){
+            Log.e("TAG", "onStart: "+ adapter.getItemCount() );
+            default_message.setVisibility(View.VISIBLE);
+        }
+//        else{
+//            default_message.setVisibility(View.GONE);
+//        }
     }
 
     public static class RequestViewHolder extends RecyclerView.ViewHolder {

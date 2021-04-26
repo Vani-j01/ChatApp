@@ -92,18 +92,28 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     final Messages messages = userMessagesList.get(position);
 
 
-    String fromUserID= messages.getFrom();
+    final String fromUserID= messages.getFrom();
     String fromMessageType = messages.getType();
 
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(fromUserID);
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
-    userRef.addValueEventListener(new ValueEventListener() {
+
+        userRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             if (snapshot.hasChild("image")){
                 //Setting the image
-                MyAppGlideModule obj = new MyAppGlideModule();
-                obj.setImage(messages.getFrom(),holder.receiverProfileImage);
+//                MyAppGlideModule obj = new MyAppGlideModule();
+//                obj.setImage(messages.getFrom(),holder.receiverProfileImage);
+
+                GlideApp.with(holder.receiverProfileImage.getContext())
+                        .load(UserProfileImageRef.child(messages.getFrom()+ ".jpg"))
+                        .fitCenter()
+                        .placeholder(R.drawable.user_image)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(holder.receiverProfileImage);
 
             }
         }

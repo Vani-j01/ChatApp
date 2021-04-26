@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -116,20 +119,34 @@ public class Settings extends AppCompatActivity {
         RootReference.child("Users").child(currentUserId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull final DataSnapshot snapshot) {
 
                         //Checking if data exists
                         if ((snapshot.exists()) && (snapshot.hasChild("username")) && (snapshot.hasChild("image"))) {
 
                             String retrieveUserName = snapshot.child("username").getValue().toString();
                             String retrieveUserStatus = snapshot.child("status").getValue().toString();
+                            String profileimage = snapshot.child("image").getValue().toString();
+
+
+
 
                             userName.setText(retrieveUserName);
                             userStatus.setText(retrieveUserStatus);
 
                             //Setting the image
-                            MyAppGlideModule obj = new MyAppGlideModule();
-                            obj.setImage(currentUserId, userDisplayImage);
+//                            MyAppGlideModule obj = new MyAppGlideModule();
+//                            obj.setImage(currentUserId, userDisplayImage);
+
+
+                            GlideApp.with(getApplicationContext())
+                                    .load(UserProfileImageRef.child(currentUserId + ".jpg"))
+                                    .fitCenter()
+                                    .placeholder(R.drawable.user_image)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                    .into(userDisplayImage);
+
 
 
                         } else if ((snapshot.exists()) && (snapshot.hasChild("username"))) {
