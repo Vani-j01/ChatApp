@@ -246,6 +246,7 @@ public class ChatActivity extends AppCompatActivity {
 
         rootReference.child("Message").child(messageSenderID).child(messageReceiverID)
                 .addChildEventListener(listener);
+        
     }
 
 

@@ -1,5 +1,5 @@
 # ChatApp
-Chating App Made Using : Androidx and Firebase
+Chatting App Made Using : Androidx and Firebase
 
 ### Layout and Functionality inspired by WhatsApp 
 
@@ -23,6 +23,7 @@ Chating App Made Using : Androidx and Firebase
 - [Glide v4](https://github.com/bumptech/glide)
 - [Android Image Cropper](https://github.com/ArthurHub/Android-Image-Cropper)
 
-
+## Some Screenshots of the app
+- <img src="demoimges/Screenshot_1620025677.png" width="150">
 
 **[In Progress]**

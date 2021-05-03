@@ -1,9 +1,13 @@
 package com.example.letschat;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,17 +103,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(fromUserID);
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
-
         userRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             if (snapshot.hasChild("image")){
                 //Setting the image
-//                MyAppGlideModule obj = new MyAppGlideModule();
-//                obj.setImage(messages.getFrom(),holder.receiverProfileImage);
+//               MyAppGlideModule obj = new MyAppGlideModule();
+//               obj.setImage(messages.getFrom(),holder.receiverProfileImage);
 
-                GlideApp.with(holder.receiverProfileImage.getContext())
-                        .load(UserProfileImageRef.child(messages.getFrom()+ ".jpg"))
+              GlideApp.with(holder.receiverProfileImage.getContext())
+                        .load(UserProfileImageRef.child(messages.getFrom() + ".jpg"))
                         .fitCenter()
                         .placeholder(R.drawable.user_image)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)

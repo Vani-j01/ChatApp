@@ -98,7 +98,12 @@ public class login extends Fragment {
                 AllowUserToLogin();
             }
         });
-        
+        phone_log_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LoginActivity)getActivity()).openPhoneRegister();
+            }
+        });
 
         return view;
     }
