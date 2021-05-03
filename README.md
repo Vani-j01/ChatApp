@@ -24,6 +24,11 @@ Chatting App Made Using : Androidx and Firebase
 - [Android Image Cropper](https://github.com/ArthurHub/Android-Image-Cropper)
 
 ## Some Screenshots of the app
-- <img src="demoimages/Screenshot_1620025677.png" width="150">
+<img src="demoimages/Screenshot_1620025677.png" width="150">
+<img src="demoimages/Screenshot_1620025682.png" width="150">
+<img src="demoimages/Screenshot_1620025650.png" width="150">
+<img src="demoimages/Screenshot_1620025647.png" width="150">
+
+- [Complete UI](https://docs.google.com/document/d/1INwCx8Nj8pNXT3Sk8E2QxdFolnC29i-jSVpFroekgbo/edit?usp=sharing)
 
 **[In Progress]**
